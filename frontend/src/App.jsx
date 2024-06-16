@@ -24,14 +24,14 @@ function Signup() {
 function App() {
   return (
       <div>
-        <Header/>
 
     <BrowserRouter>
+        <Header/>
       <Routes>
         <Route path="/" element={<ProtectedRoutes><Home /></ProtectedRoutes>} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/Register" element={<Register />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/create-note" element={<CreateNote/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
