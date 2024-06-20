@@ -33,6 +33,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-note" element={<CreateNote/>}/>
+        <Route path="/edit-note/:id" element={<CreateNote/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>

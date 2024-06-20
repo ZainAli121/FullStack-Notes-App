@@ -1,14 +1,30 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
 export default function NoteForm() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const navigate = useNavigate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) {
+            api.get(`notes/${id}/`).then((response) => {
+                const note = response.data;
+                setTitle(note.title);
+                setContent(note.content);
+            }).catch((error) => alert("error in fetching note's details"));
+        }
+    }, [id])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (id) updateNote();
+        else createNote();
+    }
 
     const createNote = (e) => {
-        e.preventDefault();
         api.post("notes/", { title, content })
             .then((response) => {
                 if (response.status === 201) alert("Note Created");
@@ -17,11 +33,20 @@ export default function NoteForm() {
         navigate("/");
     }
 
+    const updateNote = (e) => {
+        api.put(`notes/${id}/update/`, { title, content })
+        .then((response) => {
+            if (response.status === 200) alert("Note Updated");
+            else alert("Error Updating Note");
+        }).catch((error) => alert(error));
+        navigate("/");
+    }
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-6">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Create Note</h1>
-                <form onSubmit={createNote}>
+                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">{id ? "Update Note" : "Create Note"}</h1>
+                <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Title</label>
                         <input

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
+import NoteForm from "../components/NoteForm";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
     const [notes, setNotes] = useState([])
     const [content, setContent] = useState("")
     const [title, setTitle] = useState("")
+    const navigate = useNavigate();
 
     useEffect(() => {
         getNotes();
-    }, [notes])
+    }, [])
 
     const getNotes = () => {
         api.get("notes/").
@@ -20,13 +23,20 @@ export default function Home() {
     const deleteNote = (id) => {
         api.delete(`notes/${id}/delete/`)
             .then((response => {
-                if (response.status === 204) alert("Note Deleted")
-                else alert("Error Deleting Note")
+                if (response.status === 204) {
+                    alert("Note Deleted");
+                    setNotes(notes.filter(note => note.id !== id)); // Remove deleted note from state
+                } else {
+                    alert("Error Deleting Note");
+                }
             }))
             .catch((error) => alert(error))
         getNotes();
     }
-    console.log(notes)
+
+    const onEdit = (id) => {
+        navigate(`/edit-note/${id}`);
+    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mx-10 ">
@@ -39,12 +49,12 @@ export default function Home() {
                         </p>
                     </div>
                     <div className="px-6 py-4 flex justify-between">
-                        {/* <button
-            onClick={onEdit}
+                        <button
+           onClick={() => onEdit(note.id)}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Edit
-          </button> */}
+          </button>
                         <button
                             onClick={() => deleteNote(note.id)}
                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
