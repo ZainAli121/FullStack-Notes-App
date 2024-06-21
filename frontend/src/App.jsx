@@ -18,7 +18,7 @@ function Logout() {
 
 function Signup() {
   localStorage.clear()
-  return <Navigate to="/register"/>
+  return <Register />
 }
 
 function App() {
@@ -32,8 +32,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<Signup />} />
-          <Route path="/create-note" element={<CreateNote />} />
-          <Route path="/edit-note/:id" element={<CreateNote />} />
+          <Route path="/create-note" element={<ProtectedRoutes><CreateNote /></ProtectedRoutes>} />
+          <Route path="/edit-note/:id" element={<ProtectedRoutes><CreateNote /></ProtectedRoutes>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../constants";
 
@@ -48,6 +48,7 @@ export default function Header() {
                 className="text-white hover:bg-blue-700 px-3 py-2 rounded"
               >
                 {item.name}
+                
               </Link>
             )
           )}
