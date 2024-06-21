@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
+import NotificationContext from "../context/NotificationContext";
 
 export default function NoteForm() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const navigate = useNavigate();
     const { id } = useParams();
+    const { showNotification } = useContext(NotificationContext);
 
     useEffect(() => {
         if (id) {
@@ -14,7 +16,7 @@ export default function NoteForm() {
                 const note = response.data;
                 setTitle(note.title);
                 setContent(note.content);
-            }).catch((error) => alert("error in fetching note's details"));
+            }).catch((error) => showNotification("error in fetching note's details"));
         }
     }, [id])
 
@@ -27,18 +29,18 @@ export default function NoteForm() {
     const createNote = (e) => {
         api.post("notes/", { title, content })
             .then((response) => {
-                if (response.status === 201) alert("Note Created");
-                else alert("Error Creating Note");
-            }).catch((error) => alert(error));
+                if (response.status === 201) showNotification('Note Created Successfully!');
+                else showNotification("Error Creating Note");
+            }).catch((error) => showNotification(`Error: ${error.message}`));
         navigate("/");
     }
 
     const updateNote = (e) => {
         api.put(`notes/${id}/update/`, { title, content })
         .then((response) => {
-            if (response.status === 200) alert("Note Updated");
-            else alert("Error Updating Note");
-        }).catch((error) => alert(error));
+            if (response.status === 200) showNotification("Note Updated Successfully!");
+            else showNotification("Error Updating Note");
+        }).catch((error) => showNotification(`Error: ${error.message}`));
         navigate("/");
     }
 

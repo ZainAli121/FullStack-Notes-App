@@ -1,7 +1,8 @@
 import React from "react"
 import ProtectedRoutes from "./components/ProtectedRoutes"
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom"
-
+import NotificationSlider from "./components/Notification"
+import NotificationProvider from "./context/NotificationContextProvider"
 
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -17,28 +18,26 @@ function Logout() {
 
 function Signup() {
   localStorage.clear()
-  return <Register />
-
+  return <Navigate to="/register"/>
 }
 
 function App() {
   return (
-      <div>
-
-    <BrowserRouter>
-        <Header/>
-      <Routes>
-        <Route path="/" element={<ProtectedRoutes><Home /></ProtectedRoutes>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/create-note" element={<CreateNote/>}/>
-        <Route path="/edit-note/:id" element={<CreateNote/>}/>
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
-    </BrowserRouter>
-
-    </div>
+    <NotificationProvider>
+      <BrowserRouter>
+        <NotificationSlider />
+        <Header />
+        <Routes>
+          <Route path="/" element={<ProtectedRoutes><Home /></ProtectedRoutes>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/create-note" element={<CreateNote />} />
+          <Route path="/edit-note/:id" element={<CreateNote />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </NotificationProvider>
   )
 }
 
